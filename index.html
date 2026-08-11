@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Таймер до важного события</title>
+
+<!-- Шрифты Google Fonts: Space Grotesk для заголовков и цифр, Inter для текста -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Фоновые декоративные "звёзды" / искры, чисто визуальный элемент -->
+  <div class="bg-sparkles" aria-hidden="true"></div>
+
+  <div class="page">
+
+    <!-- ===================== ШАПКА ===================== -->
+    <header class="site-header">
+      <div class="brand">
+        <span class="brand-dot"></span>
+        <span class="brand-text">Countdown</span>
+      </div>
+      <p class="site-subtitle">Таймер до важного события</p>
+    </header>
+
+    <!-- ===================== ВЫБОР СОБЫТИЯ ===================== -->
+    <section class="event-picker" aria-label="Выбор события">
+      <div class="picker-chips" id="pickerChips">
+        <button type="button" class="chip" data-preset="birthday">
+          <span class="chip-emoji">🎂</span> День рождения
+        </button>
+        <button type="button" class="chip" data-preset="vacation">
+          <span class="chip-emoji">🏖️</span> Каникулы
+        </button>
+        <button type="button" class="chip" data-preset="newyear">
+          <span class="chip-emoji">🎄</span> Новый год
+        </button>
+        <button type="button" class="chip" data-preset="custom">
+          <span class="chip-emoji">✏️</span> Своё событие
+        </button>
+      </div>
+
+      <!-- Форма для пользовательского события и уточнения даты пресета -->
+      <form class="event-form" id="eventForm" novalidate>
+        <div class="form-row">
+          <label for="eventNameInput">Название события</label>
+          <input
+            type="text"
+            id="eventNameInput"
+            placeholder="Например: Экзамен по математике"
+            maxlength="60"
+            autocomplete="off"
+          >
+        </div>
+        <div class="form-row">
+          <label for="eventDateInput">Дата и время события</label>
+          <input type="datetime-local" id="eventDateInput">
+        </div>
+        <button type="submit" class="btn btn-primary" id="applyEventBtn">
+          Установить таймер
+        </button>
+      </form>
+    </section>
+
+    <!-- ===================== ГЛАВНЫЙ ТАЙМЕР ===================== -->
+    <main>
+      <section class="timer-section" aria-label="Обратный отсчёт">
+        <div class="timer-heading">
+          <p class="timer-label">Обратный отсчёт до</p>
+          <h1 class="event-name" id="eventNameOutput">—</h1>
+          <p class="event-date" id="eventDateOutput">Событие не выбрано</p>
+        </div>
+
+        <!-- Сообщение о том, что событие уже наступило -->
+        <div class="event-passed" id="eventPassedMsg" hidden>
+          🎉 Событие уже наступило!
+        </div>
+
+        <!-- Табло с флип-цифрами -->
+        <div class="flip-board" id="flipBoard" role="timer" aria-live="off">
+          <div class="flip-unit" data-unit="days">
+            <div class="flip-digits" id="digits-days"></div>
+            <span class="flip-caption">Дней</span>
+          </div>
+          <div class="flip-colon">:</div>
+          <div class="flip-unit" data-unit="hours">
+            <div class="flip-digits" id="digits-hours"></div>
+            <span class="flip-caption">Часов</span>
+          </div>
+          <div class="flip-colon">:</div>
+          <div class="flip-unit" data-unit="minutes">
+            <div class="flip-digits" id="digits-minutes"></div>
+            <span class="flip-caption">Минут</span>
+          </div>
+          <div class="flip-colon">:</div>
+          <div class="flip-unit" data-unit="seconds">
+            <div class="flip-digits" id="digits-seconds"></div>
+            <span class="flip-caption">Секунд</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== ТРИ ИНФОРМАЦИОННЫХ БЛОКА ===================== -->
+      <section class="info-grid">
+
+        <!-- Факт дня -->
+        <article class="card" id="factCard">
+          <div class="card-eyebrow">Факт дня</div>
+          <p class="card-body" id="factText">Загрузка факта…</p>
+        </article>
+
+        <!-- Картинка дня -->
+        <article class="card card-image" id="imageCard">
+          <div class="card-eyebrow">Картинка дня</div>
+          <div class="card-image-wrap">
+            <img id="dayImage" alt="Тематическая картинка дня" loading="lazy">
+          </div>
+        </article>
+
+        <!-- Фраза / цитата дня -->
+        <article class="card" id="quoteCard">
+          <div class="card-eyebrow">Цитата дня</div>
+          <p class="card-body card-quote" id="quoteText">Загрузка цитаты…</p>
+        </article>
+
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Сделано для школьного проекта · данные хранятся только в вашем браузере</p>
+    </footer>
+  </div>
+
+  <!-- ===================== МОДАЛЬНОЕ ОКНО ПОДТВЕРЖДЕНИЯ ===================== -->
+  <div class="modal-overlay" id="confirmOverlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Сменить событие?</h2>
+      <p id="modalText">Текущий отсчёт будет заменён новым событием.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost" id="modalCancelBtn">Отмена</button>
+        <button type="button" class="btn btn-primary" id="modalConfirmBtn">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

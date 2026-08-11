@@ -1,0 +1,576 @@
+/* =========================================================================
+   ТАЙМЕР ДО СОБЫТИЯ — СТИЛИ
+   Палитра:
+     --bg          глубокий полуночный индиго (фон страницы)
+     --surface     чуть более светлый индиго (карточки, панели)
+     --surface-2   ещё светлее — вложенные элементы (цифры табло)
+     --accent      тёплое золото — акцент, кнопки, свечение
+     --accent-2    коралловый — второй акцент (hover, чипы)
+     --text        мягкий кремовый — основной текст на тёмном фоне
+     --text-muted  приглушённый лавандово-серый — подписи
+   ========================================================================= */
+
+:root {
+  --bg: #0f1229;
+  --bg-2: #14183a;
+  --surface: #1a1f45;
+  --surface-2: #232a5c;
+  --accent: #f5b942;
+  --accent-soft: #f5b94222;
+  --accent-2: #ff6f59;
+  --text: #f4f1ea;
+  --text-muted: #9498c4;
+  --border: #2c3268;
+  --success: #6fd3a0;
+
+  --radius-s: 10px;
+  --radius-m: 18px;
+  --radius-l: 26px;
+
+  --shadow-soft: 0 10px 30px rgba(5, 7, 20, 0.45);
+  --shadow-glow: 0 0 0 1px var(--border), 0 20px 40px rgba(5, 7, 20, 0.5);
+
+  --font-display: "Space Grotesk", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+}
+
+/* Уважаем настройку "меньше анимаций" на уровне ОС */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background:
+    radial-gradient(1200px 600px at 15% -10%, #22265a 0%, transparent 60%),
+    radial-gradient(900px 500px at 100% 0%, #2a1f4d 0%, transparent 55%),
+    var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Декоративные "искры" на фоне, создаются через box-shadow-точки */
+.bg-sparkles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(2px 2px at 10% 20%, rgba(245, 185, 66, 0.5), transparent),
+    radial-gradient(2px 2px at 80% 15%, rgba(255, 111, 89, 0.4), transparent),
+    radial-gradient(1.5px 1.5px at 60% 70%, rgba(244, 241, 234, 0.35), transparent),
+    radial-gradient(1.5px 1.5px at 25% 85%, rgba(245, 185, 66, 0.3), transparent),
+    radial-gradient(2px 2px at 92% 60%, rgba(244, 241, 234, 0.25), transparent);
+  background-repeat: no-repeat;
+  opacity: 0.8;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+/* ===================== ШАПКА ===================== */
+.site-header {
+  text-align: center;
+  margin-bottom: 28px;
+  animation: fade-drop 0.6s ease both;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px 2px var(--accent-soft);
+}
+
+.site-subtitle {
+  margin: 10px 0 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(24px, 4vw, 34px);
+  color: var(--text);
+}
+
+/* ===================== ВЫБОР СОБЫТИЯ ===================== */
+.event-picker {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 30px;
+  animation: fade-drop 0.6s ease 0.05s both;
+}
+
+.picker-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 14.5px;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chip:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 6px 18px rgba(245, 185, 66, 0.15);
+}
+
+.chip:active {
+  transform: translateY(0);
+}
+
+.chip.is-active {
+  background: linear-gradient(135deg, var(--accent), #e08f2f);
+  color: #23180a;
+  border-color: transparent;
+}
+
+.chip-emoji {
+  font-size: 16px;
+}
+
+/* Форма (появляется только для "своё событие") */
+.event-form {
+  display: none;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 14px;
+  align-items: end;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border);
+}
+
+.event-form.is-visible {
+  display: grid;
+  animation: fade-drop 0.35s ease both;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-row label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.form-row input {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  padding: 11px 13px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color-scheme: dark;
+}
+
+.form-row input:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+/* ===================== КНОПКИ ===================== */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 14.5px;
+  border-radius: var(--radius-s);
+  padding: 12px 20px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #e08f2f);
+  color: #23180a;
+  box-shadow: 0 8px 20px rgba(245, 185, 66, 0.25);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(245, 185, 66, 0.35);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  color: var(--text);
+  border-color: var(--text-muted);
+}
+
+/* ===================== ТАЙМЕР ===================== */
+.timer-section {
+  text-align: center;
+  margin-bottom: 34px;
+  animation: fade-drop 0.6s ease 0.1s both;
+}
+
+.timer-label {
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.event-name {
+  font-family: var(--font-display);
+  font-size: clamp(28px, 5.5vw, 46px);
+  margin: 8px 0 4px;
+  background: linear-gradient(135deg, var(--text) 30%, var(--accent) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.event-date {
+  margin: 0 0 26px;
+  color: var(--text-muted);
+  font-size: 15.5px;
+}
+
+.event-passed {
+  display: inline-block;
+  margin-bottom: 24px;
+  padding: 12px 22px;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-s);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--accent);
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
+
+/* --- Табло флип-часов --- */
+.flip-board {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.flip-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.flip-digits {
+  display: flex;
+  gap: 6px;
+}
+
+.flip-colon {
+  font-family: var(--font-mono);
+  font-size: clamp(24px, 5vw, 44px);
+  color: var(--text-muted);
+  padding-top: 14px;
+  align-self: flex-start;
+}
+
+.flip-caption {
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Одна цифра табло — карточка с "флип" анимацией при смене значения */
+.flip-card {
+  position: relative;
+  width: clamp(38px, 9vw, 58px);
+  height: clamp(52px, 12vw, 76px);
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border-radius: 8px;
+  box-shadow: var(--shadow-glow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.flip-card::after {
+  /* горизонтальная линия по центру, как у настоящего табло-флипера */
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 2;
+}
+
+.flip-card span {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(22px, 5.5vw, 40px);
+  color: var(--accent);
+}
+
+/* Анимация переворота при обновлении цифры */
+.flip-card.is-flipping span {
+  animation: flip-in 0.4s ease;
+}
+
+@keyframes flip-in {
+  0% {
+    transform: translateY(-40%) scaleY(0.4);
+    opacity: 0.3;
+  }
+  60% {
+    transform: translateY(4%) scaleY(1.05);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scaleY(1);
+  }
+}
+
+/* ===================== ИНФОРМАЦИОННЫЕ КАРТОЧКИ ===================== */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  animation: fade-drop 0.6s ease 0.15s both;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 34px rgba(5, 7, 20, 0.55);
+}
+
+.card-eyebrow {
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  color: var(--accent-2);
+  margin-bottom: 12px;
+}
+
+.card-body {
+  margin: 0;
+  font-size: 15.5px;
+  color: var(--text);
+  line-height: 1.55;
+}
+
+.card-quote {
+  font-style: italic;
+  color: var(--text);
+}
+
+.card-image {
+  padding: 22px 22px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-image-wrap {
+  margin-top: 4px;
+  border-radius: var(--radius-s);
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: var(--surface-2);
+}
+
+.card-image-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.5s ease;
+}
+
+.card-image:hover img {
+  transform: scale(1.05);
+}
+
+/* ===================== ПОДВАЛ ===================== */
+.site-footer {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ===================== МОДАЛЬНОЕ ОКНО ===================== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 8, 20, 0.65);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 50;
+  animation: overlay-in 0.2s ease both;
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  padding: 26px;
+  max-width: 380px;
+  width: 100%;
+  box-shadow: var(--shadow-glow);
+  animation: modal-pop 0.25s ease both;
+}
+
+.modal h2 {
+  margin: 0 0 10px;
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+
+.modal p {
+  margin: 0 0 20px;
+  color: var(--text-muted);
+  font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ===================== АНИМАЦИИ ===================== */
+@keyframes fade-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(245, 185, 66, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(245, 185, 66, 0); }
+}
+
+@keyframes overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-pop {
+  from { opacity: 0; transform: scale(0.94) translateY(6px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* ===================== АДАПТИВНОСТЬ ===================== */
+@media (max-width: 760px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .event-form {
+    grid-template-columns: 1fr;
+  }
+
+  .flip-colon {
+    padding-top: 8px;
+  }
+}
+
+@media (max-width: 420px) {
+  .flip-board {
+    gap: 6px;
+  }
+
+  .flip-digits {
+    gap: 4px;
+  }
+}
